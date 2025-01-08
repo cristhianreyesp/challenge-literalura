@@ -25,7 +25,7 @@ El sistema ofrece una serie de funcionalidades que permiten interactuar con los 
 Permite buscar un libro en la base de datos mediante el título.
 
 ```java
-public void buscarlibro();
+private void buscarlibro();
 ```
 #### Descripción:
 - **Entrada:** El usuario debe ingresar el título del libro.
@@ -39,7 +39,7 @@ public void buscarlibro();
 
 Permite listar todos los libros que están registrados en la base de datos.
 ```java
-public void listarLibrosregistrados();
+private void listarLibrosregistrados();
 ```
 ##### Descripción:
 - **Entrada:** No requiere ninguna entrada del usuario.
@@ -51,7 +51,7 @@ public void listarLibrosregistrados();
 ### 3. Listar Autores Registrados
 Permite listar todos los autores que están registrados en la base de datos.
  ```java
- public void listarautoresregistrados();
+ private void listarautoresregistrados();
  ```
 
 #### Descripción:
@@ -77,7 +77,7 @@ Permite listar autores que están vivos en un año específico.
 ### 5. Listar Autores Vivos por Año
 Permite listar libros registrados en un idioma específico.
  ```java
-public void listalibroidioma();
+private void listalibroidioma();
  ```
 
 #### Descripción:
