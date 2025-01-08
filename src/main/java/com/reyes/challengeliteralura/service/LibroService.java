@@ -17,13 +17,13 @@ public class LibroService {
         libroRepository.save(libro);
     }
 
-//    public List<Libro> listarLibros(){
-//        return libroRepository.findAll();
-//    }
+    public List<Libro> listarLibrosregistrados(){
+        return libroRepository.findAll();
+    }
 
-//    public List<Libro> libroPorLenguajes(String lenguajes){
-//        return libroRepository.findByl(lenguajes);
-//    }
+    public List<Libro> libroPorLenguajes(String lenguaje){
+        return libroRepository.findBylenguajes(lenguaje);
+    }
 
     public Optional<Libro> obtenerLibroTitulo(String titulo){
         return libroRepository.findByTitulo(titulo);

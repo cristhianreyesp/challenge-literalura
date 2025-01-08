@@ -22,9 +22,9 @@ public class AutorService {
         return autorRepository.findAllConLibros();
     }
 
-//    public List<Autor> listarAutoresVivosEnAnio(int fecha){
-//        return autorRepository.findAutoresVivosEnAnioConLibros(fecha);
-//    }
+    public List<Autor> listarAutoresVivos(int fecha){
+        return autorRepository.findAutoresVivosConLibros(fecha);
+    }
 
     public Optional<Autor> obtenerAutorPorNombre(String nombre){
         return autorRepository.findByNombre(nombre);

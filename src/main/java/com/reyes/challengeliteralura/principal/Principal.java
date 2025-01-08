@@ -29,18 +29,20 @@ public class Principal {
         this.autorService = autorService;
     }
 
-
     public void muestraElMenu() {
         var opcion = -1;
         while (opcion != 0) {
-            var menu = """
-                    1 - Buscar libro por titulo
-                    2 - Listar libro registrados
-                    3 - Listar Autores registrados
-                    4 - Listar Autores vidos en un determinado año
-                    5 - Listar libros por idioma
-                    0 - Salir
-                    """;
+            var menu = "\n===========================\n"
+                    + "📚  Biblioteca Virtual 📚\n"
+                    + "===========================\n"
+                    + "1️⃣  Buscar libro por título\n"
+                    + "2️⃣  Listar libros registrados\n"
+                    + "3️⃣  Listar autores registrados\n"
+                    + "4️⃣  Listar autores vivos por año\n"
+                    + "5️⃣  Listar libros por idioma\n"
+                    + "0️⃣  Salir\n"
+                    + "===========================\n"
+                    + "🔎  Elige una opción: ";;
             System.out.println(menu);
             opcion = teclado.nextInt();
             teclado.nextLine();
@@ -49,18 +51,29 @@ public class Principal {
                 case 1:
                     buscarlibro();
                     break;
+                case 2:
+                    listarLibrosregistrados();
+                    break;
+                case 3:
+                    listarautoresregistrados();
+                    break;
+                case 4:
+                    listarautoresvivos();
+                    break;
+                case 5:
+                    listalibroidioma();
+                    break;
                 case 0:
-                    System.out.println("Cerrando la aplicación...");
+                    System.out.println("\uD83D\uDED1 Cerrando...");
                     break;
                 default:
-                    System.out.println("Opción inválida");
+                    System.out.println("\uD83D\uDED1 Opción inválida, por favor seleccione una opción válida.");
             }
         }
-
     }
 
     private void buscarlibro() {
-        System.out.print("Ingrese el titulo (o el nombre del autor) del libro que desea buscar: ");
+        System.out.print("🔎 Ingrese el titulo del libro: ");
         String tituloLibro = teclado.nextLine();
 
         String url = "https://gutendex.com/books/?search=" + tituloLibro.replace(" ", "%20");
@@ -68,37 +81,135 @@ public class Principal {
         LibrosListaDTO resultados = conversor.convertirDatos(json, LibrosListaDTO.class);
         List<LibroDTO> librosDTO = resultados.resultados();
 
-        System.out.println(); // Salto de línea
+        System.out.printf("\n");
 
         if(librosDTO.isEmpty()){
-            System.out.println("• Libro no encontrado en la API.\n");
+            System.out.println("❌ Libro no encontrado\n");
             return;
         }
 
         Optional<Libro> optionalLibro = libroService.obtenerLibroTitulo(resultados.resultados().stream().findFirst().get().titulo());
         if(optionalLibro.isPresent()){
-            System.out.println("• El libro \'" + optionalLibro.get().getTitulo() + "\' ya se encuentra en la base de datos.");
+            System.out.println("⚠\uFE0F El libro \'" + optionalLibro.get().getTitulo() + "\' ya se encuentra en la base de datos.");
         }else{
-            // Crear un nuevo libro
+
             Libro libroNuevo = new Libro(resultados);
 
-            // Buscar o crear autor para el nuevo libro
             AutorDTO primerAutorDTO = librosDTO.stream().findFirst().get().autores().get(0);
             Optional<Autor> autor = autorService.obtenerAutorPorNombre(primerAutorDTO.nombre());
             if(!autor.isPresent()){
                 Autor autorNuevo = new Autor(resultados);
                 autorService.crearAutor(autorNuevo);
 
-                // Asignar autor al libro nuevo
                 libroNuevo.setAutor(autorNuevo);
 
-                // Guardar libro en la base de datos
                 libroService.guardarLibro(libroNuevo);
                 System.out.println(libroNuevo);
-                System.out.println("• Libro guardado correctamente.");
+                System.out.println("✅ Libro guardado correctamente.");
             }
         }
 
-        System.out.println(); // Salto de línea
+        System.out.printf("\n");
     }
+
+
+    private void listarLibrosregistrados() {
+        List<Libro> libros = libroService.listarLibrosregistrados();
+
+        if(libros.isEmpty()){
+            System.out.println("⚠\uFE0F La lista de libros esta vacia.");
+            return;
+        }
+        libros.forEach(l -> System.out.println(l));
+    }
+
+    private void listarautoresregistrados() {
+        List<Autor> autores = autorService.listarAutores();
+
+        if(autores.isEmpty()){
+            System.out.println("⚠\uFE0F No hay datos registrados.");
+            return;
+        }
+        autores.forEach(l -> System.out.println(l));
+    }
+
+    private void listarautoresvivos(){
+        System.out.print("🔎 Escriba el año que desea buscar: ");
+        int fecha = teclado.nextInt();
+
+        List<Autor> autoresVivos = autorService.listarAutoresVivos(fecha);
+
+        System.out.printf("\n");
+
+        if(autoresVivos.isEmpty()){
+            System.out.println("⚠\uFE0F No hay autores vivos en la fecha: " + fecha + ".\n");
+            return;
+        }
+
+        autoresVivos.forEach(a -> {
+            System.out.println("====================================");
+            System.out.println("\uD83E\uDDD1\u200D\uD83C\uDFEB  Autor: " + a.getNombre());
+            System.out.println("====================================");
+            System.out.println("📅  Fecha de Nacimiento: " + a.getFechaNacimiento());
+            System.out.println("✝️  Fecha de Muerte: " + a.getFechaMuerte());
+            System.out.println("====================================");
+            System.out.println("📚  Libros publicados: ");
+            a.getLibrosAutor().forEach(libro ->
+                    System.out.println("  - " + libro.getTitulo())
+            );
+
+            System.out.println("====================================\n");
+        });
+
+        System.out.printf("\n");
+    }
+
+    private void listalibroidioma() {
+        System.out.println("====================================");
+        System.out.println("  🌍  LENGUAJES DISPONIBLES ");
+        System.out.println("====================================\n");
+        System.out.println("es - Español");
+        System.out.println("en - Inglés");
+        System.out.println("fr - Francés");
+        System.out.println("pt - Portugués");
+        System.out.println("====================================\n");
+
+        System.out.print("🔎 Selecciona un idioma: ");
+        String lenguaje = teclado.nextLine().toLowerCase();
+        System.out.printf("\n");
+
+        switch (lenguaje) {
+            case "es":
+                System.out.println("📚 Seleccionaste Español.");
+                break;
+            case "en":
+                System.out.println("📚 Seleccionaste Inglés.");
+                break;
+            case "fr":
+                System.out.println("📚 Seleccionaste Francés.");
+                break;
+            case "pt":
+                System.out.println("📚 Seleccionaste Portugués.");
+                break;
+            default:
+                System.out.println("❌ La opción no es válida. Por favor, elige un idioma válido.\n");
+                return;
+        }
+
+        List<Libro> libros = libroService.libroPorLenguajes(lenguaje);
+
+        if (libros.isEmpty()) {
+            System.out.println("🚫 No hay libros en ese idioma.\n");
+            return;
+        }
+
+        System.out.println("====================================");
+        System.out.println("  📖 LIBROS DISPONIBLES EN " + lenguaje.toUpperCase());
+        System.out.println("====================================\n");
+
+        libros.forEach(libro -> System.out.println("  - " + libro.getTitulo()));
+
+        System.out.println("====================================\n");
+    }
+
 }

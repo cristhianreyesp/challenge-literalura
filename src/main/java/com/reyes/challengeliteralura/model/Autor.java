@@ -70,7 +70,13 @@ public class Autor {
     }
     @Override
     public String toString(){
-        return nombre + " (" + fechaNacimiento + "-" + fechaMuerte + ")\n" +
-                "Libros: " + librosAutor.stream().map(l -> l.getTitulo()).collect(Collectors.toList()) + "\n";
+        return "===== AUTORES REGISTRADOS =====\n" +
+                "\uD83E\uDDD1\u200D\uD83C\uDFEB Autor: " + nombre + "\n" +
+                "📅 Fecha de Nacimiento: " + fechaNacimiento + "\n" +
+                "✝️ Fecha de Muerte: " + fechaMuerte + "\n" +
+                "📚 Libros: " + librosAutor.stream()
+                .map(libro -> libro.getTitulo())
+                .collect(Collectors.joining(", ")) + "\n" +
+                "==============================\n";
     }
 }

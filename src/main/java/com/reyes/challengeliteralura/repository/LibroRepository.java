@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface LibroRepository extends JpaRepository<Libro, Long> {
     @Query("SELECT l FROM Libro l WHERE l.titulo = :titulo")
     Optional<Libro> findByTitulo(@Param("titulo") String titulo);
-    @Query("SELECT l FROM Libro l WHERE l.lenguajes = :lenguajes")
-    List<Libro> findByIdioma(@Param("lenguajes") String lenguajes);
+    @Query("SELECT l FROM Libro l WHERE l.lenguajes = :lenguaje")
+    List<Libro> findBylenguajes(@Param("lenguaje") String lenguaje);
 }

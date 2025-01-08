@@ -70,9 +70,11 @@ public class Libro {
 
     @Override
     public String toString(){
-        return "Titulo: " + titulo +
-                "\nAutor: " + (autor != null ? autor.getNombre() : "N/A") +
-                "\nLenguaje: " + lenguajes +
-                "\nNúmero de descargas: " + cantDescargas + "\n";
+        return "===== LIBROS REGISTRADOS =====\n" +
+                "📖 Título: " + titulo + "\n" +
+                "\uD83E\uDDD1\u200D\uD83C\uDFEB Autor: " + (autor != null ? autor.getNombre() : "N/A") + "\n" +
+                "🌍 Lenguaje: " + lenguajes + "\n" +
+                "📊 Total Descargas: " + cantDescargas + "\n" +
+                "==============================\n";
     }
 }
